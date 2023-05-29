@@ -2,10 +2,13 @@ package com.baseprojectapi.crud.apis;
 
 
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.baseprojectapi.crud.beans.Usuario;
+import com.baseprojectapi.crud.jpa.repository.UsuarioRepository;
 import com.baseprojectapi.dao.DBConnection;
 import com.baseprojectapi.dao.UsuariosDAO;
 
@@ -26,18 +30,35 @@ import com.baseprojectapi.dao.UsuariosDAO;
 @RequestMapping("/baseprojectapi")
 public class restController {
 
-	
+	@Autowired
+	UsuarioRepository usuarioRepository;
 
 	
 	@GetMapping("/consultausuarios")
-	public List<Usuario> consultaUsuarioss() {
+	public List<com.baseprojectapi.crud.jpa.model.Usuario> consultaUsuarioss() {
 		System.out.println("Entrando a micro servicios");
-		UsuariosDAO userdao = new UsuariosDAO();
-		List<Usuario> res =  userdao.consultarUsuarios();
+
+		List<com.baseprojectapi.crud.jpa.model.Usuario> usuarios = new ArrayList<com.baseprojectapi.crud.jpa.model.Usuario>();
+		
+		
+		try {
+			usuarioRepository.findAll().forEach(usuarios::add);	
+		}catch(Exception e) {
+			e.printStackTrace();
+			
+		}
 		
 		
 		
-		return res;
+		//UsuariosDAO userdao = new UsuariosDAO();
+		//List<Usuario> res =  userdao.consultarUsuarios();
+		
+		
+		
+		System.out.println("saliendo de api");
+		
+		
+		return usuarios;
 	}
 	
 	
