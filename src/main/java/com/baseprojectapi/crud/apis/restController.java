@@ -160,4 +160,33 @@ public class restController {
 		
 	}
 	
+	
+	@GetMapping("/verusrindividual/{datos}")
+	public com.baseprojectapi.crud.jpa.model.Usuario verusrindividual(@PathVariable  String datos) {
+		
+		System.out.println("entrando a consultar usuario individual "+datos);
+		
+		
+		
+		try {
+			
+			Optional<com.baseprojectapi.crud.jpa.model.Usuario> usuarioData = usuarioRepository.findById(datos);
+			
+			
+			if (usuarioData.isPresent()) {
+				return usuarioData.get();
+			}else {
+				return null;
+			}
+			
+			
+
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		
+	}
+	
 }
