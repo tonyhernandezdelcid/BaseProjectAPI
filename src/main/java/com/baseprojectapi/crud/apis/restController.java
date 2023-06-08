@@ -20,7 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.baseprojectapi.crud.beans.Usuario;
-import com.baseprojectapi.crud.jpa.repository.UsuarioRepository;
+import com.baseprojectapi.crud.jpa.repository.MUsuarioRepository;
+//import com.baseprojectapi.crud.jpa.repository.UsuarioRepository;
 import com.baseprojectapi.dao.DBConnection;
 import com.baseprojectapi.dao.UsuariosDAO;
 import java.util.Optional;
@@ -32,18 +33,21 @@ import java.util.Optional;
 public class restController {
 
 	@Autowired
-	UsuarioRepository usuarioRepository;
+	//UsuarioRepository usuarioRepository;
+	MUsuarioRepository musuarioRepository;
 
 	
 	@GetMapping("/consultausuarios")
-	public List<com.baseprojectapi.crud.jpa.model.Usuario> consultaUsuarioss() {
+	//public List<com.baseprojectapi.crud.jpa.model.Usuario> consultaUsuarioss() {
+	public List<com.baseprojectapi.crud.jpa.model.MUsuario> consultaUsuarioss() {
 		System.out.println("Entrando a micro servicios");
 
-		List<com.baseprojectapi.crud.jpa.model.Usuario> usuarios = new ArrayList<com.baseprojectapi.crud.jpa.model.Usuario>();
-		
+		//List<com.baseprojectapi.crud.jpa.model.Usuario> usuarios = new ArrayList<com.baseprojectapi.crud.jpa.model.Usuario>();
+		List<com.baseprojectapi.crud.jpa.model.MUsuario> usuarios = new ArrayList<com.baseprojectapi.crud.jpa.model.MUsuario>();
 		
 		try {
-			usuarioRepository.findAll().forEach(usuarios::add);	
+			//usuarioRepository.findAll().forEach(usuarios::add);	
+			usuarios = musuarioRepository.findAll();
 		}catch(Exception e) {
 			e.printStackTrace();
 			
@@ -68,7 +72,8 @@ public class restController {
 		System.out.println("creando usuario");
 		//UsuariosDAO userdao = new UsuariosDAO();
 		//Usuario usuario = new Usuario();
-		com.baseprojectapi.crud.jpa.model.Usuario usuario = new com.baseprojectapi.crud.jpa.model.Usuario();
+		//com.baseprojectapi.crud.jpa.model.Usuario usuario = new com.baseprojectapi.crud.jpa.model.Usuario();
+		com.baseprojectapi.crud.jpa.model.MUsuario usuario = new com.baseprojectapi.crud.jpa.model.MUsuario();
 		try {
 			JSONObject object = new JSONObject(datos);
 			usuario.setCodigo(object.getString("codigo"));
@@ -82,7 +87,9 @@ public class restController {
 			System.out.println("telefono: "+ usuario.getTelefono());
 			
 			
-			usuarioRepository.save(usuario);
+			//usuarioRepository.save(usuario);
+			musuarioRepository.save(usuario);
+			
 			return true;
 		} catch(Exception ex) {
 			ex.printStackTrace();
@@ -106,24 +113,30 @@ public class restController {
 	public boolean modificaUsuario(@RequestBody String datos) {
 		System.out.println("entrando a editar usuarios");
 		
-		com.baseprojectapi.crud.jpa.model.Usuario usuario = new com.baseprojectapi.crud.jpa.model.Usuario();
+		
+		com.baseprojectapi.crud.jpa.model.MUsuario usuario = new com.baseprojectapi.crud.jpa.model.MUsuario();
+		//com.baseprojectapi.crud.jpa.model.Usuario usuario = new com.baseprojectapi.crud.jpa.model.Usuario();
 		//UsuariosDAO userdao = new UsuariosDAO();
 		//Usuario usuario = new Usuario();
 		try {
 			JSONObject object = new JSONObject(datos);
+			usuario.setId(object.getString("id"));
 			usuario.setCodigo(object.getString("codigo"));
 			usuario.setNombre(object.getString("nombre"));
 			usuario.setTelefono(object.getString("telefono"));
 			
+			System.out.println("id mod: "+ usuario.getId());
 			System.out.println("codigo mod: "+ usuario.getCodigo());
 			System.out.println("nombre mod: "+ usuario.getNombre());
 			System.out.println("telefono mod: "+ usuario.getTelefono());
 			
-			Optional<com.baseprojectapi.crud.jpa.model.Usuario> usuarioData = usuarioRepository.findById(usuario.getCodigo());
-
+			//Optional<com.baseprojectapi.crud.jpa.model.Usuario> usuarioData = usuarioRepository.findById(usuario.getCodigo());
+			Optional<com.baseprojectapi.crud.jpa.model.MUsuario> usuarioData = musuarioRepository.findById(usuario.getId());
 			
 			if (usuarioData.isPresent()) {
-				usuarioRepository.save(usuario);
+				//usuarioRepository.save(usuario);
+				musuarioRepository.save(usuario);
+				
 				return true;
 			}else {
 				
@@ -151,7 +164,8 @@ public class restController {
 		//return userdao.eliminarUsuario(datos);
 		
 		try {
-			usuarioRepository.deleteById(datos);
+			//usuarioRepository.deleteById(datos);
+			musuarioRepository.deleteById(datos);
 			return true;
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -162,7 +176,9 @@ public class restController {
 	
 	
 	@GetMapping("/verusrindividual/{datos}")
-	public com.baseprojectapi.crud.jpa.model.Usuario verusrindividual(@PathVariable  String datos) {
+	//public com.baseprojectapi.crud.jpa.model.Usuario verusrindividual(@PathVariable  String datos) {
+	public com.baseprojectapi.crud.jpa.model.MUsuario verusrindividual(@PathVariable  String datos) {
+		
 		
 		System.out.println("entrando a consultar usuario individual "+datos);
 		
@@ -170,7 +186,8 @@ public class restController {
 		
 		try {
 			
-			Optional<com.baseprojectapi.crud.jpa.model.Usuario> usuarioData = usuarioRepository.findById(datos);
+			//Optional<com.baseprojectapi.crud.jpa.model.Usuario> usuarioData = usuarioRepository.findById(datos);
+			Optional<com.baseprojectapi.crud.jpa.model.MUsuario> usuarioData = musuarioRepository.findById(datos);
 			
 			
 			if (usuarioData.isPresent()) {
